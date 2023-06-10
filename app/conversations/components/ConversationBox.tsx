@@ -11,16 +11,14 @@ import clsx from "clsx";
 import { FullConversationType } from "@/app/types";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import Avatar from "../../components/Avatar";
+import AvatarGroup from "@/app/components/AvatarGroup";
 
 interface ConversationBoxProps {
   data: FullConversationType;
   selected?: boolean;
 }
 
-const ConversationBox: React.FC<ConversationBoxProps> = ({
-  data,
-  selected,
-}) => {
+const ConversationBox: React.FC<ConversationBoxProps> = ({ data, selected }) => {
   const otherUser = useOtherUser(data);
   const session = useSession();
   const router = useRouter();
@@ -81,7 +79,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         selected ? "bg-neutral-100" : "bg-white"
       )}
     >
-      <Avatar user={otherUser} />
+      {data.isGroup ? <AvatarGroup users={data.users} /> : <Avatar user={otherUser} />}
+
       <div
         className="
             min-w-0 flex-1

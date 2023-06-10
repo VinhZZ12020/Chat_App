@@ -9,6 +9,7 @@ import { IoClose, IoTrash } from "react-icons/io5";
 import Avatar from "../../../components/Avatar";
 import Modal from "../../../components/sidebar/Modal";
 import ConfirmModal from "./ConfirmModal";
+import AvatarGroup from "../../../components/AvatarGroup";
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -18,11 +19,7 @@ interface ProfileDrawerProps {
   };
 }
 
-const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
-  isOpen,
-  onClose,
-  data,
-}) => {
+const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) => {
   const otherUser = useOtherUser(data);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -44,10 +41,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
   return (
     <>
-      <ConfirmModal
-        isOpen={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-      />
+      <ConfirmModal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)} />
 
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -165,12 +159,10 @@ ease-in-out duration-500
          "
                         >
                           <div className="mb-2">
-                            <Avatar user={otherUser} />
+                            {data.isGroup ? <AvatarGroup users={data.users} /> : <Avatar user={otherUser} />}
                           </div>
                           <div>{title}</div>
-                          <div className="text-sm text-gray-500">
-                            {statusText}
-                          </div>
+                          <div className="text-sm text-gray-500">{statusText}</div>
                           <div className="flex gap-10 my-8">
                             <div
                               onClick={() => setConfirmOpen(true)}
@@ -225,6 +217,24 @@ ease-in-out duration-500
                              sm:px-6
                           "
                             >
+                              {data.isGroup && (
+                                <div>
+                                  <dt
+                                    className="
+                                   text-sm
+                                    font-medium
+                                    text-gray-500
+                                    sm:w-40
+                                    sm:flex-shrink-0
+                                  "
+                                  >
+                                    Emails
+                                  </dt>
+                                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                                    {data.users.map((user) => user.email).join(", ")}
+                                  </dd>
+                                </div>
+                              )}
                               {!data.isGroup && (
                                 <div>
                                   <dt
@@ -274,9 +284,7 @@ ease-in-out duration-500
 
                                   "
                                     >
-                                      <time dateTime={joinedDate}>
-                                        {joinedDate}
-                                      </time>
+                                      <time dateTime={joinedDate}>{joinedDate}</time>
                                     </dd>
                                   </div>
                                 </>
